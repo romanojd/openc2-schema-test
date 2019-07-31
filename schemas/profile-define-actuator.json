@@ -1,0 +1,71 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "profile-define-actuator.json",
+	"title": "Profile Schema: Define Actuator",
+	"oneOf": [
+		{
+			"$ref": "#/definitions/OpenC2_Command",
+		},
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response"
+		}
+	],
+	"definitions": {
+		"OpenC2_Command": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+				},
+				{
+					"properties": {
+						"actuator": {
+							"$ref": "#/definitions/Actuator"
+						}
+					}
+				}
+			]
+		},
+		"Actuator": {
+			"title": "OpenC2 Actuator",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"slpf": {
+					"$ref": "#/definitions/slpf:Actuator",
+					"description": "Actuator specifiers defined in the Stateless Packet Filtering profile. A message can specify many Actuator types but for it to validate with this profile it must at least specify SLPF"
+				}
+			},
+			"required": ["slpf"]
+		},
+		"slpf:Actuator": {
+			"title": "SLPF Actuator specifiers",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"hostname": {
+					"$ref": "oc2ls-v1.0.json#/definitions/Hostname",
+					"description": "[RFC1123] hostname (can be a domain name or IP address) for a particular device with SLPF functionality"
+				},
+				"named_group": {
+					"type": "string",
+					"description": "User defined collection of devices with SLPF functionality"
+				},
+				"asset_id": {
+					"type": "string",
+					"description": "Unique identifier for a particular SLPF"
+				},
+				"asset_tuple": {
+					"type": "array",
+					"description": "Unique tuple identifier for a particular SLPF consisting of a list of up to 10 strings",
+					"uniqueItems": true,
+					"minItems": 1,
+					"maxItems": 10,
+					"items": {
+						"title": "SLPF asset tuple",
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

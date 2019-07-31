@@ -1,0 +1,236 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Derived",
+	"description": "SLPF Profile Schema",
+	"oneOf": [
+		{
+			"$ref": "#/definitions/OpenC2_Command",
+			"description": "A message defined by an Action-Target pair that is sent from a Producer and received by a Consumer"
+		},
+		{
+			"$ref": "#/definitions/OpenC2_Response",
+			"description": "A message from a Consumer to a Producer acknowledging a Command or returning the requested resources or status to a previously received Command"
+		}
+	],
+	"definitions": {
+		"OpenC2_Command": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+				},
+				{
+					"properties": {
+						"action": {
+							"$ref": "#/definitions/Action"
+						},
+						"target": {
+							"$ref": "#/definitions/Target"
+						},
+						"args": {
+							"$ref": "#/definitions/Args"
+						},
+						"actuator": {
+							"$ref": "#/definitions/Actuator"
+						}
+					}
+				}
+			]
+		},
+		"OpenC2_Response": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response"
+				},
+				{
+					"properties": {
+						"results": {
+							"$ref": "#/definitions/Results",
+							"description": "Map of key:value pairs that contain additional results based on the invoking Command"
+						}
+					}
+				}
+			]
+		},
+		"Action": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/Action"
+				},
+				{
+					"pattern": "(query|deny|allow|update|delete)"
+				}
+			]
+		},
+		"Target": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/Target"
+				},
+				{
+					"propertyNames": {
+						"pattern": "(features|file|ipv4_net|ipv6_net|ipv4_connection|ipv6_connection|slpf:rule_number)"
+					}
+				},
+				{
+					"properties": {
+						"slpf:rule_number": {
+							"$ref": "#/definitions/slpf:Rule_ID",
+							"description": "Immutable identifier assigned when a rule is created. Identifies a rule to be deleted"
+						}
+					}
+				}
+			]
+		},
+		"Actuator": {
+			"title": "OpenC2 Actuator",
+			"type": "object",
+			"properties": {
+				"slpf": {
+					"$ref": "#/definitions/slpf:Actuator",
+					"description": "Actuator specifiers defined in the Stateless Packet Filtering profile. A message can specify many Actuator types but for it to validate with this profile it must at least specify SLPF"
+				}
+			},
+			"required": [
+				"slpf"
+			],
+			"additionalProperties": true
+		},
+		"Args": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/Args"
+				},
+				{
+					"properties": {
+						"slpf": {
+							"$ref": "#/definitions/slpf:Args",
+							"description": "Command arguments defined in the Stateless Packet Filter profile"
+						}
+					}
+				}
+			]
+		},
+		"Results": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/Results"
+				},
+				{
+					"properties": {
+						"slpf": {
+							"$ref": "#/definitions/slpf:Results",
+							"description": "Response types defined in the Stateless Packet Filter profile"
+						}
+					}
+				}
+			]
+		},
+		"slpf:Actuator": {
+			"title": "SLPF Actuator specifiers",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"hostname": {
+					"$ref": "#/definitions/Hostname",
+					"description": "[RFC1123] hostname (can be a domain name or IP address) for a particular device with SLPF functionality"
+				},
+				"named_group": {
+					"type": "string",
+					"description": "User defined collection of devices with SLPF functionality"
+				},
+				"asset_id": {
+					"type": "string",
+					"description": "Unique identifier for a particular SLPF"
+				},
+				"asset_tuple": {
+					"type": "array",
+					"description": "Unique tuple identifier for a particular SLPF consisting of a list of up to 10 strings",
+					"uniqueItems": true,
+					"minItems": 1,
+					"maxItems": 10,
+					"items": {
+						"title": "SLPF asset tuple",
+						"type": "string"
+					}
+				}
+			}
+		},
+		"slpf:Args": {
+			"title": "SLPF Args Specifiers",
+			"type": "object",
+			"additionalProperties": false,
+			"minProperties": 1,
+			"properties": {
+				"drop_process": {
+					"$ref": "#/definitions/slpf:Drop_Process",
+					"description": "Specifies how to handle denied packets"
+				},
+				"persistent": {
+					"type": "boolean",
+					"description": "Normal operations assume any changes to a device are to be implemented persistently. Setting the persistent modifier to FALSE results in a change that is not persistent in the event of a reboot or restart"
+				},
+				"direction": {
+					"$ref": "#/definitions/slpf:Direction",
+					"description": "Specifies whether to apply rules to incoming or outgoing traffic. If omitted, rules are applied to both"
+				},
+				"insert_rule": {
+					"$ref": "#/definitions/slpf:Rule_ID",
+					"description": "Specifies the identifier of the rule within a list, typically used in a top-down rule list"
+				}
+			}
+		},
+		"slpf:Drop_Process": {
+			"title": "SLPF drop process types",
+			"type": "string",
+			"oneOf": [
+				{
+					"const": "none",
+					"description": "Drop the packet and do not send a notification to the source of the packet"
+				},
+				{
+					"const": "reject",
+					"description": "Drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet"
+				},
+				{
+					"const": "false_ack",
+					"description": "Drop the traffic and send a false acknowledgment"
+				}
+			]
+		},
+		"slpf:Direction": {
+			"title": "SLPF direction types",
+			"type": "string",
+			"oneOf": [
+				{
+					"const": "both",
+					"description": "Apply rules to all traffic"
+				},
+				{
+					"const": "ingress",
+					"description": "Apply rules to incoming traffic only"
+				},
+				{
+					"const": "egress",
+					"description": "Apply rules to outgoing traffic only"
+				}
+			]
+		},
+		"slpf:Rule_ID": {
+			"title": "SLPF access rule identifier",
+			"type": "integer",
+			"description": "Immutable identifier assigned when a rule is created. Identifies a rule to be deleted"
+		},
+		"slpf:Results": {
+			"title": "SLPF Results",
+			"type": "object",
+			"additionalProperties": false,
+			"minProperties": 1,
+			"properties": {
+				"rule_number": {
+					"$ref": "#/definitions/slpf:Rule_ID",
+					"description": "Rule identifier returned from allow or deny Command"
+				}
+			}
+		}
+	}
+}

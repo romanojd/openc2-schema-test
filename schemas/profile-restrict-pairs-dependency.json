@@ -1,0 +1,50 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "profile-restrict-pairs-dependency.json",
+	"title": "Profile Schema: Restrict Pairs by Dependency",
+	"oneOf": [
+		{
+			"$ref": "#/definitions/OpenC2_Command",
+		},
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response"
+		}
+	],
+	"definitions": {
+		"OpenC2_Command": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+				},
+				{
+					"oneOf": [
+						{
+							"properties": {
+								"action": {
+									"enum": ["delete"]
+								},
+								"target": {
+									"propertyNames": {
+										"enum": ["file", "slpf:rule_number"]
+									}
+								}
+							}
+						},
+						{
+							"properties": {
+								"action": {
+									"enum": ["allow", "deny"]
+								},
+								"target": {
+									"propertyNames": {
+										"enum": ["ipv4_connection", "ipv6_connection", "ipv4_net", "ipv6_net"]
+									}
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	}
+}

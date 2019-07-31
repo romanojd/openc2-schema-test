@@ -1,0 +1,11 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "schema-c1.json",
+	"title": "Schema C, File 1",
+	"type": "object",
+	"properties": {
+		"name": {
+			"$ref": "schema-c2.json#/definitions/Name"
+		}
+	}
+}

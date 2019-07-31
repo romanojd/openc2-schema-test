@@ -1,0 +1,8 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "command.json",
+	"title": "OpenC2 Command Schema",
+	"description": "A message defined by an Action-Target pair that is sent from a Producer and received by a Consumer",
+	"type": "object",
+	"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+}

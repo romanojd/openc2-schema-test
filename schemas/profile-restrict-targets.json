@@ -1,0 +1,41 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "profile-restrict-targets.json",
+	"title": "Profile Schema: Restrict Targets",
+	"oneOf": [
+		{
+			"$ref": "#/definitions/OpenC2_Command",
+		},
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response"
+		}
+	],
+	"definitions": {
+		"OpenC2_Command": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+				},
+				{
+					"properties": {
+						"target": {
+							"$ref": "#/definitions/Target"
+						}
+					}
+				}
+			]
+		},
+		"Target": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/Target"
+				},
+				{
+					"propertyNames": {
+						"pattern": "(features|file|ipv4_net|ipv6_net|ipv4_connection|ipv6_connection)"
+					}
+				}
+			]
+		}
+	}
+}

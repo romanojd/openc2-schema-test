@@ -1,0 +1,17 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "message.json",
+	"title": "Core Schema",
+	"description": "This schema is intended to validate all possible derived content for the OpenC2 Language Specification version 1.0. It is meant to be used as a template that can be more strictly tuned when creating actuator profile specific schema",
+	"type": "object",
+	"oneOf": [
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command",
+			"description": "A message defined by an Action-Target pair that is sent from a Producer and received by a Consumer"
+		},
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response",
+			"description": "A message from a Consumer to a Producer acknowledging a Command or returning the requested resources or status to a previously received Command"
+		}
+	]
+}

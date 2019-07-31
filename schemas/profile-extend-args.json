@@ -1,0 +1,109 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "profile-extend-args.json",
+	"title": "Profile Schema: Extend Arguments",
+	"oneOf": [
+		{
+			"$ref": "#/definitions/OpenC2_Command",
+		},
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response"
+		}
+	],
+	"definitions": {
+		"OpenC2_Command": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+				},
+				{
+					"properties": {
+						"args": {
+							"$ref": "#/definitions/Args"
+						}
+					}
+				}
+			]
+		},
+		"Args": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/Args"
+				},
+				{
+					"properties": {
+						"slpf": {
+							"$ref": "#/definitions/slpf:Args",
+							"description": "Command arguments defined in the Stateless Packet Filter profile"
+						}
+					}
+				}
+			]
+		},
+		"slpf:Args": {
+			"title": "SLPF Args Specifiers",
+			"type": "object",
+			"additionalProperties": false,
+			"minProperties": 1,
+			"properties": {
+				"drop_process": {
+					"$ref": "#/definitions/slpf:Drop_Process",
+					"description": "Specifies how to handle denied packets"
+				},
+				"persistent": {
+					"type": "boolean",
+					"description": "Normal operations assume any changes to a device are to be implemented persistently. Setting the persistent modifier to FALSE results in a change that is not persistent in the event of a reboot or restart"
+				},
+				"direction": {
+					"$ref": "#/definitions/slpf:Direction",
+					"description": "Specifies whether to apply rules to incoming or outgoing traffic. If omitted, rules are applied to both"
+				},
+				"insert_rule": {
+					"$ref": "#/definitions/slpf:Rule_ID",
+					"description": "Specifies the identifier of the rule within a list, typically used in a top-down rule list"
+				}
+			}
+		},
+		"slpf:Drop_Process": {
+			"title": "SLPF drop process types",
+			"type": "string",
+			"oneOf": [
+				{
+					"const": "none",
+					"description": "Drop the packet and do not send a notification to the source of the packet"
+				},
+				{
+					"const": "reject",
+					"description": "Drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet"
+				},
+				{
+					"const": "false_ack",
+					"description": "Drop the traffic and send a false acknowledgment"
+				}
+			]
+		},
+		"slpf:Direction": {
+			"title": "SLPF direction types",
+			"type": "string",
+			"oneOf": [
+				{
+					"const": "both",
+					"description": "Apply rules to all traffic"
+				},
+				{
+					"const": "ingress",
+					"description": "Apply rules to incoming traffic only"
+				},
+				{
+					"const": "egress",
+					"description": "Apply rules to outgoing traffic only"
+				}
+			]
+		},
+		"slpf:Rule_ID": {
+			"title": "SLPF access rule identifier",
+			"type": "integer",
+			"description": "Immutable identifier assigned when a rule is created. Identifies a rule to be deleted"
+		}
+	}
+}

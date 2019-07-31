@@ -1,0 +1,62 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "profile-restrict-pairs-conditional.json",
+	"title": "Profile Schema: Restrict Pairs by Conditional",
+	"oneOf": [
+		{
+			"$ref": "#/definitions/OpenC2_Command",
+		},
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response"
+		}
+	],
+	"definitions": {
+		"OpenC2_Command": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+				},
+				{
+					"oneOf": [
+						{
+							"if": {
+								"properties": {
+									"action": {
+										"enum": ["delete"]
+									}
+								}
+							},
+							"then": {
+								"properties": {
+									"target": {
+										"propertyNames": {
+											"enum": ["file", "slpf:rule_number"]
+										}
+									}
+								}
+							},
+							"else": {
+								"if": {
+									"properties": {
+										"action": {
+											"enum": ["allow", "deny"]
+										}
+									}
+								},
+								"then": {
+									"properties": {
+										"target": {
+											"propertyNames": {
+												"enum": ["ipv4_connection", "ipv6_connection", "ipv4_net", "ipv6_net"]
+											}
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	}
+}

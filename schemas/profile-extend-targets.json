@@ -1,0 +1,49 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "profile-extend-targets.json",
+	"title": "Profile Schema: Extend Targets",
+	"oneOf": [
+		{
+			"$ref": "#/definitions/OpenC2_Command",
+		},
+		{
+			"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Response"
+		}
+	],
+	"definitions": {
+		"OpenC2_Command": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/OpenC2_Command"
+				},
+				{
+					"properties": {
+						"target": {
+							"$ref": "#/definitions/Target"
+						}
+					}
+				}
+			]
+		},
+		"Target": {
+			"allOf": [
+				{
+					"$ref": "oc2ls-v1.0.json#/definitions/Target"
+				},
+				{
+					"properties": {
+						"slpf:rule_number": {
+							"$ref": "#/definitions/slpf:Rule_ID",
+							"description": "Immutable identifier assigned when a rule is created. Identifies a rule to be deleted"
+						}
+					}
+				}
+			]
+		},
+		"slpf:Rule_ID": {
+			"title": "SLPF access rule identifier",
+			"type": "integer",
+			"description": "Immutable identifier assigned when a rule is created. Identifies a rule to be deleted"
+		}
+	}
+}

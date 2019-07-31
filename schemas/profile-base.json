@@ -1,0 +1,11 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "profile-base.json",
+	"title": "Profile Schema: Base",
+	"description": "This schema implements the entire Language Specification schema with no changes.",
+	"allOf": [
+		{
+			"$ref": "oc2ls-v1.0.json"
+		}
+	]
+}
