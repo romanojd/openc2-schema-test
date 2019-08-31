@@ -3,30 +3,48 @@ import json
 import pprint
 from validator import Validator
 
+show_error_message = True
 
 if __name__ == '__main__':
-	# schema_filename = 'oc2ls-v1.0.json'
-	schema_filename = 'oc2slpf-v1.0.json'
-
-	# instantiate validator
-	v = Validator(schema_filename)
-
-	# read the source file
+	# get the list of files
 	source_path = '..\\messages'
-	source_files = ['oc2slpf-example_a2.json', 'oc2slpf-example_a12.json']	
-	# source_files = ['command-pass.json', 'command-fail.json']
+	source_files = []
+	for dirpath, dirname_list, filename_list in os.walk(source_path):
+		source_files.extend([os.path.join(dirpath, filename) for filename in filename_list])
+		# print(f'dirpath: {dirpath}\ndirnames: {dirname_list}\nfilenames: {filename_list}\n')
 
-	for source_filename in source_files:
-		with open(os.path.join(source_path, source_filename), 'r') as json_message_file:
-			message = json.load(json_message_file)
+	# process each file
+	for source_filepath in source_files:
+		error_message = None
 
-		# print the message
-		print('Message:')
-		pprint.pprint(message)
+		# load the message
+		with open(source_filepath, 'r') as json_message_file:
+			try:
+				message = json.load(json_message_file)
+			except json.decoder.JSONDecodeError:
+				message = None
+				error_message = 'JSON Decode Error'
+
+		# set the validator
+		if source_filepath.find('commands') > -1:
+			v = Validator('command.json')
+		elif source_filepath.find('responses') > -1:
+			v = Validator('response.json')
+		else:
+			v = None
 
 		# validate the source file
-		error_message = v.validate(message)
-		if not error_message:
-			print(f'Schema "{schema_filename}": PASS\n')
+		if message and v:
+			error_message = v.validate(message)
+
+		# report invalid/pass
+		if error_message:
+			if source_filepath.startswith('..\\messages\\pass'):
+				print(f'[FAIL] {source_filepath}')
+				if show_error_message:
+					print(f'{error_message}\n')
+
+		# report valid/fail
 		else:
-			print(f'Schema "{schema_filename}": FAIL\n{error_message}\n')
+			if source_filepath.startswith('..\\messages\\fail'):
+				print(f'[PASS] {source_filepath}')

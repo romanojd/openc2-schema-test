@@ -6,9 +6,9 @@ from validator import Validator
 
 if __name__ == '__main__':
 	# specify schema
-	schema_filename = 'schema-a.json'
+	# schema_filename = 'schema-a.json'
 	# schema_filename = 'schema-b.json'
-	# schema_filename = 'schema-c1.json'
+	schema_filename = 'schema-c1.json'
 
 	# specify message files
 	source_files = ['test-pass.json', 'test-fail.json']	

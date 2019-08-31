@@ -231,7 +231,7 @@
 				}
 			},
 			"patternProperties": {
-				"^(x-)?((\\w+):)\\w+$": {
+				"^(x-)?(([A-Za-z]\\w*):)[A-Za-z]\\w*$": {
 					"type": ["array", "boolean", "integer", "number", "object", "string"],
 					"description": "Language specification validator for committee approved and custom actuators. in practice actuators should be a static property and this catch all should be removed"
 				}
@@ -243,7 +243,7 @@
 			"additionalProperties": false,
 			"minProperties": 1,
 			"patternProperties": {
-				"^(x-)?\\w+$": {
+				"^(x-)?[A-Za-z]\\w*$": {
 					"type": "object",
 					"description": "Language specification validator for committee approved and custom actuators. in practice actuators should be a static property and this catch all should be removed"
 				}
@@ -273,7 +273,7 @@
 				}
 			},
 			"patternProperties": {
-				"^(x-)?\\w+$": {
+				"^(x-)?[A-Za-z]\\w*$": {
 					"type": ["array", "boolean", "integer", "number", "object", "string"],
 					"description": "Language specification validator for committee approved and custom args extensions. in practice args extension should be a static property and this catch all should be removed"
 				}
@@ -356,7 +356,7 @@
 				}
 			},
 			"patternProperties": {
-				"^(x-)?\\w+$": {
+				"^(x-)?[A-Za-z]\\w*$": {
 					"type": ["array", "boolean", "integer", "number", "object", "string"],
 					"description": "Language specification validator for committee approved and custom results extensions. in practice results extension should be a static property and this catch all should be removed"
 				}
@@ -462,7 +462,7 @@
 			"title": "OpenC2 IPv4 Net",
 			"type": "string",
 			"description": "IPv4 address as defined in [RFC0791] - CIDR prefix-length. If omitted, refers to a single host address",
-			"pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])(\\/(3[0-2]|[0-2]?[0-9]))?"
+			"pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])(\\/(3[0-2]|[0-2]?[0-9]))?$"
 		},
 		"IPv4_Connection": {
 			"title": "OpenC2 IPv4 Connection",
