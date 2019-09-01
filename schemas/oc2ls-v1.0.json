@@ -753,7 +753,7 @@
 			"title": "OpenC2 Version",
 			"type": "string",
 			"description": "Major.Minor version number",
-			"pattern": "^\\d+\\.\\d+$"
+			"pattern": "^v?\\d+\\.\\d+(-\\w+)?"
 		},
 		"Binary": {
 			"title": "OpenC2 Binary",
